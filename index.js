@@ -48,7 +48,6 @@ app.get("/jokes", async (req, res, next) => {
 });
 
 app.get("/jokes/:id", async (req, res) => {
-
   let jokes = await Joke.findByPk(req.params.id)
   res.send(jokes);
 
