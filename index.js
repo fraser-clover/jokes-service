@@ -11,11 +11,6 @@ app.get("/jokes", async (req, res, next) => {
     // TODO - filter the jokes by tags and content
 
     const { tags, content } = req.query;
-
-    // const where = {};
-
-    // if (tags) where.tags = tags;
-    // if (content) where.joke = content;
     
     let jokes;
 
@@ -44,33 +39,31 @@ app.get("/jokes", async (req, res, next) => {
       });
 
     }
-   
-
-    // const jokesByTag = await Joke.findAll({
-    //   where: {
-    //     tags: {
-    //       [Op.like]: `%${tags}%`
-    //     }
-    //   }
-    // });
-
-    // const jokesByContent = await Joke.findAll({
-    //   where: {
-    //     joke: {
-    //       [Op.like]: `%${content}%`
-    //     }
-    //   }
-    // });
-
-    //   where[key] =  {
-    //     [Op.like]: `%${req.query[key]}%` // search within the string, not only exact matches
-    // };
 
     res.send(jokes);
   } catch (error) {
     console.error(error);
     next(error);
   }
+});
+
+app.post("/jokes", async (req, res) => {
+    const { tags, joke } = req.body;
+    const newJoke = await Joke.create({tags, joke});
+    res.json(newJoke);
+})
+
+app.put("/jokes/:id", (req, res) => {
+    const {tags, joke} = req.body;
+    jokes[req.params.id].tags = tags;
+    jokes[req.params.id].joke = joke;
+    res.send(jokes);
+});
+
+
+app.delete("/jokes/:id", (req, res) => {
+    jokes = jokes.filter((joke, idx) => idx !== Number(req.params.id));
+    res.send(jokes);
 });
 
 // we export the app, not listening in here, so that we can run tests
