@@ -47,22 +47,31 @@ app.get("/jokes", async (req, res, next) => {
   }
 });
 
+app.get("/jokes/:id", async (req, res) => {
+
+  let jokes = await Joke.findByPk(req.params.id)
+  res.send(jokes);
+
+})
+
 app.post("/jokes", async (req, res) => {
     const { tags, joke } = req.body;
     const newJoke = await Joke.create({tags, joke});
     res.json(newJoke);
 })
 
-app.put("/jokes/:id", (req, res) => {
+app.put("/jokes/:id", async (req, res) => {
     const {tags, joke} = req.body;
-    jokes[req.params.id].tags = tags;
-    jokes[req.params.id].joke = joke;
-    res.send(jokes);
+    const specificJoke = await Joke.findByPk(req.params.id);
+    await specificJoke.update({
+      tags, joke
+     })
+    res.send(specificJoke);
 });
 
 
-app.delete("/jokes/:id", (req, res) => {
-    jokes = jokes.filter((joke, idx) => idx !== Number(req.params.id));
+app.delete("/jokes/:id", async (req, res) => {
+    const jokes = await Joke.deleteById(req.params.id);
     res.send(jokes);
 });
 
