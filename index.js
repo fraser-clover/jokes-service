@@ -71,8 +71,10 @@ app.put("/jokes/:id", async (req, res) => {
 
 
 app.delete("/jokes/:id", async (req, res) => {
-    const jokes = await Joke.deleteById(req.params.id);
-    res.send(jokes);
+  const jokeToDelete = await Joke.findByPk(req.params.id);
+  await jokeToDelete.destroy();
+  const jokes = await Joke.findAll({})
+  res.send(jokes);
 });
 
 // we export the app, not listening in here, so that we can run tests
